@@ -1,0 +1,131 @@
+@{
+    ViewBag.Title = "Productos";
+}
+
+@section Styles {
+    @Styles.Render("~/Content/plugins/dataTables/dataTablesStyles")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/dataTables")
+    <script src="@Url.Content("~/Scripts/Transacciones/on_Producto.js")"></script>
+}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Productos</h5>
+                    <div class="ibox-tools">
+                        <button class="btn btn-success " type="button" data-bind="click: $root.instanciar"><i class="fa fa-newspaper-o"></i>&nbsp;&nbsp;<span class="bold">Nuevo</span></button>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    @*<div class="dataTable_wrapper">*@
+                        @*<div class="table-responsive">*@
+                            <table class="table table-striped table-bordered table-hover dataTables-Productos" data-bind="visible: Productos().length > 0">
+                                <thead>
+                                    <tr>
+                                        <th style="display: none;">Id</th>
+                                        <th>Código</th>
+                                        <th>Nombre</th>
+                                        <th>Precio Oferta</th>
+                                        <th>PVP</th>
+                                        <th>Precio Credito</th>
+                                        <th>Combo</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody data-bind="foreach: Productos">
+                                    <tr>
+                                        <td data-bind="visible:false , text: Id "></td>
+                                        <td data-bind="text: CodigoProducto"></td>
+                                        <td data-bind="text: NombreProducto"></td>
+                                        <td data-bind="text: PrecioOferta"></td>
+                                        <td data-bind="text: PVP"></td>
+                                        <td data-bind="text: PrecioCredito"></td>
+                                        <td data-bind="text: Combo"></td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-xs btn-success">Acciones</button>
+                                                <button type="button" class="btn btn-xs btn-success dropdown-toggle" data-toggle="dropdown">
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu" role="menu">
+                                                    <li><a data-bind="click: $root.edit">Editar</a></li>
+                                                    <li><a data-bind="click: $root.delete">Eliminar</a></li>
+                                                </ul>
+                                            </div> 
+
+                                            @*<button class="btn btn-sm btn-success" data-bind="click: $root.edit">Editar</button>
+                                            <button class="btn btn-sm btn-default" data-bind="click: $root.delete">Eliminar</button>*@
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        @*</div>*@
+                    @*</div>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="myModal" class="modal fade" role="dialog" data-bind="with: Producto">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="myModal">&times;</button>
+                <h4 class="modal-title">Producto</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <label class="control-label col-md-2" for="Id" data-bind="visible: false">id</label>
+                    <label class="form-control input-sm" data-bind="text: Id, visible: false"></label>
+                    <div class="form-group">
+                        <label class="control-label col-md-2" for="CodigoProducto">Código</label>
+                        <div class="col-md-10">
+                            <input class="form-control input-sm" data-bind="value: CodigoProducto" type="text" title="Código" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2" for="NombreProducto">Nombre</label>
+                        <div class="col-md-10">
+                            <input class="form-control input-sm" data-bind="value: NombreProducto" type="text" title="Nombre" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2" for="PrecioOferta">Precio Oferta</label>
+                        <div class="col-md-10">
+                            <input class="form-control input-sm" data-bind="value: PrecioOferta" type="text" title="Precio Oferta" pattern="(?<=^| )\d+(\.\d+)?(?=$| )"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2" for="PVP">PVP</label>
+                        <div class="col-md-10">
+                            <input class="form-control input-sm" data-bind="value: PVP" type="text" title="PVP" pattern="(?<=^| )\d+(\.\d+)?(?=$| )"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2" for="PrecioCredito">Precio Crédito</label>
+                        <div class="col-md-10">
+                            <input class="form-control input-sm" data-bind="value: PrecioCredito" type="text" title="Precio Crédito" pattern="(?<=^| )\d+(\.\d+)?(?=$| )"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2" for="Combo">Combo</label>
+                        <div class="col-md-10">
+                            <input class="form-control input-sm" data-bind="value: Combo" type="text" title="Combo" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnCrear" class="btn btn-success" data-bind="click: $root.create">Crear</button>
+                <button id="btnActualizar" class="btn btn-success" data-bind="click: $root.update">Actualizar</button>
+                <button class="btn btn-default" data-dismiss="myModal" data-bind="click: $root.cancel">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
