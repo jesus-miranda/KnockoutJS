@@ -1,0 +1,384 @@
+@{
+    ViewBag.Title = "Gestión Venta Internet";
+}
+
+@section Styles {
+    @Styles.Render("~/plugins/laddaStyles")
+    @Styles.Render("~/plugins/toastrStyles")
+    @*@Styles.Render("~/Content/plugins/dataTables/dataTablesStyles")*@
+    @Styles.Render("~/Scripts/plugins/jquery-ui/jqueryuiStyles")
+    @Styles.Render("~/plugins/clockpickerStyles")
+    @Styles.Render("~/plugins/dataPickerStyles")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/ladda")
+    @Scripts.Render("~/plugins/toastr")
+    @*@Scripts.Render("~/plugins/dataTables")*@
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/plugins/clockpicker")
+    @Scripts.Render("~/plugins/dataPicker")
+    <script src="@Url.Content("~/Scripts/Transacciones/on_Gestion.js")"></script>
+}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Pedido #<a data-bind="text: Pedido"></a></h5>
+                    <input type="hidden" id="IdPedido" value="@ViewBag.IdPedido" />
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        @*<a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>*@
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="form-horizontal">
+                        <label class="control-label col-md-2" for="Id" data-bind="visible: false">id</label>
+                        <label class="form-control input-sm" data-bind="text: Id, visible: false"></label>
+                        <div class="form-group">
+                            <label class="control-label col-md-2" for="Identificacion">Identificación:</label>
+                            <div class="col-md-4" data-bind="css: { 'has-error': Identificacion.hasError }">
+                                <input class="form-control input-sm" data-bind="value: Identificacion, hasfocus: Identificacion.focused, enable: EnableDatos" type="text" title="Identificación" />
+                                <span data-bind='visible: Identificacion.hasError, text: Identificacion.validationMessage'> </span>
+                            </div>
+                            <label class="control-label col-md-2" for="Nombres">Nombres:</label>
+                            <div class="col-md-4" data-bind="css: { 'has-error': Nombres.hasError }">
+                                <input class="form-control input-sm" data-bind="value: Nombres, enable: EnableDatos" type="text" title="Nombres" />
+                                <span data-bind='visible: Nombres.hasError, text: Nombres.validationMessage'> </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2" for="ProvinciaDesc">Provincia:</label>
+                            <div class="col-md-4" data-bind="css: { 'has-error': Provincia.hasError }">
+                                <select class="form-control m-b" data-bind='options: Provincias, optionsText: "Descripcion", optionsValue: "Codigo", value: Provincia, enable: EnableDatos, optionsCaption: "-- Seleccionar --"'></select>
+                                <span data-bind='visible: Provincia.hasError, text: Provincia.validationMessage'> </span>
+                            </div>
+                            <label class="control-label col-md-2" for="CiudadDesc">Ciudad:</label>
+                            <div class="col-md-4" data-bind="css: { 'has-error': Ciudad.hasError }">
+                                <select class="form-control m-b" data-bind='options: Ciudades, optionsText: "Descripcion", optionsValue: "Codigo", value: Ciudad, enable: EnableDatos, optionsCaption: "-- Seleccionar --"'></select>
+                                <span data-bind='visible: Ciudad.hasError, text: Ciudad.validationMessage'> </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2" for="Direccion">Dirección (*):</label>
+                            <div class="col-md-4" data-bind="css: { 'has-error': Direccion.hasError }">
+                                <textarea class="form-control" style="resize: none;" data-bind="value: Direccion, enable: EnableDatos" maxlength="250"></textarea>
+                                <span data-bind='visible: Direccion.hasError, text: Direccion.validationMessage'> </span>
+                            </div>
+                            <label class="control-label col-md-2">Dirección de Entrega (*):</label>
+                            <div class="col-md-4" data-bind="css: { 'has-error': DireccionEntrega.hasError }">
+                                <textarea class="form-control" style="resize: none;" data-bind='valueUpdate: "afterkeydown", value: DireccionEntrega, enable: EnableDatos' maxlength="250"></textarea>
+                                <span data-bind='visible: DireccionEntrega.hasError, text: DireccionEntrega.validationMessage'> </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2" for="ReferenciaDireccion">Referencia Dirección de Entrega (*):</label>
+                            <div class="col-md-10" data-bind="css: { 'has-error': ReferenciaDireccion.hasError }">
+                                <textarea class="form-control" style="resize: none;" data-bind="value: ReferenciaDireccion, enable: EnableDatos" maxlength="250"></textarea>
+                                <span data-bind='visible: ReferenciaDireccion.hasError, text: ReferenciaDireccion.validationMessage'> </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2" for="SucursalFacturacion">Sucursal Facturación (*):</label>
+                            <div class="col-md-4" data-bind="css: { 'has-error': SucursalFacturacion.hasError }">
+                                <select class="form-control m-b" data-bind='options: Sucursales, optionsText: "Descripcion", optionsValue: "Codigo", value: SucursalFacturacion, enable: EnableDatos, optionsCaption: "-- Seleccionar --"'></select>
+                                <span data-bind='visible: SucursalFacturacion.hasError, text: SucursalFacturacion.validationMessage'> </span>
+                            </div>
+                            <label class="control-label col-md-2" for="TipoEntrega">Forma de Entrega (*):</label>
+                            <div class="col-md-4" data-bind="css: { 'has-error': TipoEntrega.hasError }">
+                                <select class="form-control m-b" data-bind='options: TiposEntrega, optionsText: "Descripcion", optionsValue: "Id", value: TipoEntrega, enable: EnableDatos, optionsCaption: "-- Seleccionar --"'></select>
+                                <span data-bind='visible: TipoEntrega.hasError, text: TipoEntrega.validationMessage'> </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Fecha Entrega (*):</label>
+                            <div class="col-md-4" data-bind="css: { 'has-error': FechaEntrega.hasError }">
+                                <div class="input-group date" id="calendario">
+                                    <input type="text" class="form-control" data-bind="value: FechaEntrega, enable: EnableDatosEntrega" id="idFechaEntrega">
+                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                </div>
+                                <span data-bind='visible: FechaEntrega.hasError, text: FechaEntrega.validationMessage'> </span>
+                            </div>
+                            <label class="control-label col-md-2">Hora Entrega (*):</label>
+                            <div class="col-md-4" data-bind="css: { 'has-error': HoraEntrega.hasError }">
+                                <div class="input-group clockpicker" data-autoclose="true" id="reloj">
+                                    <input type="text" class="form-control" data-bind="value: HoraEntrega, enable: EnableDatosEntrega" id="idHoraEntrega">
+                                    <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+                                </div>
+                                <span data-bind='visible: HoraEntrega.hasError, text: HoraEntrega.validationMessage'> </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2" for="TelefonoConvencional">Teléfono Convencional:</label>
+                            <div class="col-md-4">
+                                <input class="form-control input-sm" data-bind="value: TelefonoConvencional, enable: EnableDatos" type="text" title="Teléfono Convencional" maxlength="15" />
+                            </div>
+                            <label class="control-label col-md-2" for="TelefonoCelular">Teléfono Celular:</label>
+                            <div class="col-md-4">
+                                <input class="form-control input-sm" data-bind="value: TelefonoCelular, enable: EnableDatos" type="text" title="Teléfono Celular" maxlength="15" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2" for="TelefonoLaboralNegocio">Teléfono Laboral Negocio:</label>
+                            <div class="col-md-4">
+                                <input class="form-control input-sm" data-bind="value: TelefonoLaboralNegocio, enable: EnableDatos" type="text" title="Teléfono Laboral Negocio" maxlength="15" />
+                            </div>
+                            <label class="control-label col-md-2" for="Email">E-mail:</label>
+                            <div class="col-md-4">
+                                <input class="form-control input-sm" data-bind="value: Email, enable: EnableDatos" type="email" title="E-mail" maxlength="200" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2" for="Observacion">Comentarios:</label>
+                            <div class="col-md-10">
+                                <textarea class="form-control" style="resize: none;" data-bind="value: Observacion, enable: EnableDatos" maxlength="250"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Detalle</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        @*<a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>*@
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div class="pull-right">
+                                        @*<i class="fa fa-cc-amex text-success"></i>
+                                            <i class="fa fa-cc-mastercard text-warning"></i>
+                                            <i class="fa fa-cc-discover text-danger"></i>
+                                            <i class="fa fa-cc-diners-club text-success"></i>
+                                            <i class="fa fa-cc-visa text-success"></i>*@
+                                    </div>
+                                    <h5 class="panel-title">
+                                        <a>Productos</a>
+                                    </h5>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="form-horizontal">
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-2">Agregar</label>
+                                                    <div class="col-md-10">
+                                                        <input class="form-control" type="text" id="ProductoAutocomplete" data-bind="enable: EnableDatos" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="dataTable_wrapper">
+                                                <div class="table-responsive">
+                                                    <table class="table table-striped table-bordered table-hover display responsive" data-bind="visible: Productos().length > 0">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Código</th>
+                                                                <th>Producto</th>
+                                                                <th>Precio Normal Unit</th>
+                                                                <th>Precio Oferta Unit</th>
+                                                                <th>Cantidad</th>
+                                                                <th>Forma Pago</th>
+                                                                <th>Ganguitas</th>
+                                                                <th>Precio Ganguita</th>
+                                                                <th>Precio Final</th>
+                                                                <th></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody data-bind="foreach: Productos">
+                                                            <tr>
+                                                                <td data-bind="text: CodigoProducto"></td>
+                                                                <td data-bind="text: NombreProducto"></td>
+                                                                <td data-bind="text: PVPFormat"></td>
+                                                                <td data-bind="text: PrecioOfertaFormat"></td>
+                                                                <td>
+                                                                    <input class="form-control input-sm" type="number" min="1" max="99" data-bind="value: Cantidad, enable: $root.EnableLineaProducto" />
+                                                                </td>
+                                                                <td>
+                                                                    <select data-bind='options: FormasDePago, optionsText: "Descripcion", optionsValue: "Codigo", value: FormaPago, enable: $root.EnableLineaProducto'></select>
+                                                                </td>
+                                                                <td>
+                                                                    <select data-bind='options: GanguitasDisponibles, optionsText: "Descripcion", optionsValue: "Codigo", value: Ganguitas, enable: EnableGanguitas'></select>
+                                                                </td>
+                                                                <td data-bind="text: PrecioGanguitaFormat"></td>
+                                                                <td data-bind="text: PrecioFinalFormat"></td>
+                                                                <td>
+                                                                    <button class="btn btn-sm btn-danger" data-bind="click: $root.RemoverProducto, enable: $root.EnableLineaProducto">Quitar</button>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <div class="panel panel-default" data-bind="visible: PagoContarjetaCredito">
+                                <div class="panel-heading">
+                                    <div class="pull-right">
+                                        <i class="fa fa-cc-amex text-success"></i>
+                                        <i class="fa fa-cc-mastercard text-warning"></i>
+                                        <i class="fa fa-cc-discover text-danger"></i>
+                                        <i class="fa fa-cc-diners-club text-success"></i>
+                                        <i class="fa fa-cc-visa text-success"></i>
+                                    </div>
+                                    <h5 class="panel-title">
+                                        <a>Tarjeta Crédito</a>
+                                    </h5>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-horizontal">
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-2">Tarjetas:</label>
+                                                    <div class="col-md-4">
+                                                        <select class="form-control m-b" data-bind='options: Tarjetas, optionsText: "Descripcion", optionsValue: "Codigo", value: Tarjeta, enable: EnableDatos'></select>
+                                                    </div>
+                                                    <label class="control-label col-md-2" for="CiudadDesc">Planes:</label>
+                                                    <div class="col-md-4">
+                                                        <select class="form-control m-b" data-bind='options: Planes, optionsText: "Descripcion", optionsValue: "Codigo", value: Plan, enable: EnableDatos'></select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div class="pull-right">
+                                        @*<i class="fa fa-cc-amex text-success"></i>
+                                            <i class="fa fa-cc-mastercard text-warning"></i>
+                                            <i class="fa fa-cc-discover text-danger"></i>
+                                            <i class="fa fa-cc-diners-club text-success"></i>
+                                            <i class="fa fa-cc-visa text-success"></i>*@
+                                    </div>
+                                    <h5 class="panel-title">
+                                        <a>Resumen Compra</a>
+                                    </h5>
+                                </div>
+                                <div class="panel-body">
+                                    <table class="table invoice-total">
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>IVA :</strong></td>
+                                                <td data-bind="text: TotalIvaFormat"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Sub Total Efectivo :</strong></td>
+                                                <td data-bind="text: TotalEfectivoFormat"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Sub Total Tarjeta :</strong></td>
+                                                <td data-bind="text: TotalTarjetaFormat"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Sub Total Crédito :</strong></td>
+                                                <td data-bind="text: TotalCreditoFormat"></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td><strong>TOTAL A PAGAR :</strong></td>
+                                                <td class="font-bold" data-bind="text: TotalVentaFormat"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="text-right">
+                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal5" data-bind="visible: VisibleNoDesea"><i class="fa fa-trash-o"></i> No Desea</button>
+                                        <button type="button" class="btn btn-success" data-bind="click: $root.Guardar, enable: EnableGuardar, visible: VisibleGuardar"><i class="fa fa-shopping-cart"></i> Guardar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*<div class="row">
+            <div class="col-lg-12">
+                <pre data-bind="text: ko.toJSON($root, null, 2)"></pre>
+            </div>
+        </div>*@
+</div>
+
+<div class="modal inmodal fade" id="myModal5" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h5 class="modal-title">No Desea</h5>
+                @*<small class="font-bold">El cliente no desea.</small>*@
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="dataTable_wrapper">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-hover display responsive" data-bind="visible: Motivos().length > 0">
+                                    <thead>
+                                        <tr>
+                                            <th>Motivo</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody data-bind="foreach: Motivos">
+                                        <tr>
+                                            <td data-bind="text: Descripcion"></td>
+                                            <td><input type="checkbox" data-bind="checked: Valor" /></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="control-label col-md-2" for="Observacion">Observación:</label>
+                            <div class="col-md-10">
+                                <textarea class="form-control" style="resize: none;" data-bind="value: Observacion" maxlength="250"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal"><i class="fa fa-arrow-left"></i> Regresar</button>
+                <button type="button" class="btn btn-success" data-bind="click: $root.GuardarNoAcepta, enable: EnableGuardarNoAcepta"><i class="fa fa-trash-o"></i> Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
