@@ -1,0 +1,324 @@
+@{
+    ViewBag.Title = "Historial Ventas";
+}
+
+@section Styles {
+    @Styles.Render("~/Content/plugins/dataTables/dataTablesStyles")
+    @Styles.Render("~/plugins/dataPickerStyles")
+    @Styles.Render("~/plugins/toastrStyles")
+    @*@Styles.Render("~/plugins/footableStyles")*@
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/dataTables")
+    @Scripts.Render("~/plugins/dataPicker")
+    @Scripts.Render("~/plugins/toastr")
+    @*@Scripts.Render("~/plugins/footable")*@
+    <script src="@Url.Content("~/Scripts/Transacciones/on_Historial.js")"></script>
+}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Parámetros</h5>
+                    <div class="ibox-tools">
+                        <button class="btn btn-default collapse-link"><i class="fa fa-chevron-up"></i> </button>
+                        <button type="button" class="btn btn-success" data-bind="click: $root.BuscarVentas"><i class="fa fa-eye"></i> Buscar</button>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="control-label" for="order_id">#Pedido</label>
+                                <input type="text" placeholder="#Pedido" class="form-control" data-bind="value: P_Pedido">
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="control-label">Fecha Inicio (*):</label>
+                                <div class="input-group date" id="FechaInicio">
+                                    <input type="text" class="form-control" data-bind="value: P_FechaInicio" required>
+                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="control-label">Fecha Fin (*):</label>
+                                <div class="input-group date" id="FechaFin">
+                                    <input type="text" class="form-control" data-bind="value: P_FechaFin" required>
+                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="control-label">Cédula</label>
+                                <input type="text" placeholder="Cédula" class="form-control" data-bind="value: P_Cedula">
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="control-label">Campaña</label>
+                                <select class="form-control m-b" data-bind='options: Campañas, optionsText: "Descripcion", optionsValue: "Id", value: P_Campana'></select>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="control-label">Usuario Gestión</label>
+                                <input type="text" placeholder="Usuario" class="form-control" data-bind="value: P_Usuario">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Ventas Online</h5>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="dataTables-VentasOnline" class="table table-striped table-bordered table-hover display responsive">
+                                <thead>
+                                    <tr>
+                                        <th>#Pedido</th>
+                                        <th>Cédula</th>
+                                        <th>Nombres</th>
+                                        <th>Ciudad</th>
+                                        <th>Provincia</th>
+                                        <th>Fecha Registro</th>
+                                        <th>Usuario Registro</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody data-bind="foreach: Ventas">
+                                    <tr>
+                                        <td data-bind="text: Pedido"></td>
+                                        <td data-bind="text: CedulaCliente"></td>
+                                        <td data-bind="text: Nombres"></td>
+                                        <td data-bind="text: CiudadDesc"></td>
+                                        <td data-bind="text: ProvinciaDesc"></td>
+                                        <td data-bind="text: FechaRegistro"></td>
+                                        <td data-bind="text: UsuarioRegistro"></td>
+                                        <td class="text-right">
+                                            <button class="btn-success btn btn-xs" data-bind="click: $root.CargarVenta">Ver</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="myModal" class="modal fade" role="dialog" data-bind="with: Venta">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="pull-left">
+                    <h4 class="modal-title">Detalle de Venta <a data-bind="text: Pedido"></a></h4>
+                </div>
+                <div class="pull-right">
+                    <button class="btn btn-success" title="Notificar a Bodega Aprobación de Crédito para Facturar"
+                            data-bind="visible: NotificarAprobacionCredito, click: NotificarBodega">
+                        Notificar Aprobación Crédito
+                    </button>
+                    @*<button class="btn btn-success" title="Reaperturar Gestión de Productos a Crédito Directo"
+                                data-bind="visible: ReaperturarGestion, click: ReaperturarVenta">
+                            Reaperturar Gestión
+                        </button>*@
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-horizontal">
+                            <label class="control-label col-md-2" for="Id" data-bind="visible: false">id</label>
+                            <label class="form-control input-sm" data-bind="text: Id, visible: false"></label>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Fecha Registro:</label>
+                                <div class="col-md-4">
+                                    <input class="form-control input-sm" data-bind="value: FechaRegistro" type="text" title="Fecha Registro" readonly />
+                                </div>
+                                <label class="control-label col-md-2">Usuario Registro:</label>
+                                <div class="col-md-4">
+                                    <input class="form-control input-sm" data-bind="value: UsuarioRegistro" type="text" title="Usuario Registro" readonly />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Cédula Cliente:</label>
+                                <div class="col-md-4">
+                                    <input class="form-control input-sm" data-bind="value: CedulaCliente" type="text" title="Cédula Cliente" readonly />
+                                </div>
+                                <label class="control-label col-md-2">Nombres:</label>
+                                <div class="col-md-4">
+                                    <input class="form-control input-sm" data-bind="value: Nombres" type="text" title="Nombres" readonly />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Ciudad:</label>
+                                <div class="col-md-4">
+                                    <input class="form-control input-sm" data-bind="value: CiudadDesc" type="text" title="Ciudad" readonly />
+                                </div>
+                                <label class="control-label col-md-2">Provincia:</label>
+                                <div class="col-md-4">
+                                    <input class="form-control input-sm" data-bind="value: ProvinciaDesc" type="text" title="Provincia" readonly />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Direccion:</label>
+                                <div class="col-md-4">
+                                    <textarea class="form-control" style="resize: none;" data-bind="value: Direccion" readonly></textarea>
+                                </div>
+                                <label class="control-label col-md-2">Direccion Entrega:</label>
+                                <div class="col-md-4">
+                                    <textarea class="form-control" style="resize: none;" data-bind="value: DireccionEntrega" readonly></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Referencia:</label>
+                                <div class="col-md-4">
+                                    <textarea class="form-control" style="resize: none;" data-bind="value: Referencia" readonly></textarea>
+                                </div>
+                                <label class="control-label col-md-2">Teléfono Convencional:</label>
+                                <div class="col-md-4">
+                                    <input class="form-control input-sm" data-bind="value: TelefonoConvencional" type="text" title="Teléfono Convencional" readonly />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Teléfono Celular:</label>
+                                <div class="col-md-4">
+                                    <input class="form-control input-sm" data-bind="value: TelefonoCelular" type="text" title="Teléfono Celular" readonly />
+                                </div>
+                                <label class="control-label col-md-2">Teléfono Laboral:</label>
+                                <div class="col-md-4">
+                                    <input class="form-control input-sm" data-bind="value: TelefonoLaboral" type="text" title="Teléfono Laboral" readonly />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Correo Electrónico:</label>
+                                <div class="col-md-4">
+                                    <input class="form-control input-sm" data-bind="value: CorreoElectronico" type="text" title="CorreoElectronico" readonly />
+                                </div>
+                                <label class="control-label col-md-2">Comentarios:</label>
+                                <div class="col-md-4">
+                                    <textarea class="form-control" style="resize: none;" data-bind="value: Observacion" readonly></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Acepta:</label>
+                                <div class="col-md-4">
+                                    <input class="form-control input-sm" data-bind="value: AceptaDesc" type="text" title="Acepta" readonly />
+                                </div>
+                                <label class="control-label col-md-2">Sucursal Facturación:</label>
+                                <div class="col-md-4">
+                                    <input class="form-control input-sm" data-bind="value: SucursalFacturacionDesc" type="text" title="SucursalFacturacion" readonly />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Fecha Entrega:</label>
+                                <div class="col-md-4">
+                                    <input class="form-control input-sm" data-bind="value: FechaEntrega" type="text" title="Fecha Entrega" readonly />
+                                </div>
+                                <label class="control-label col-md-2">Fecha Vencimiento:</label>
+                                <div class="col-md-4">
+                                    <input class="form-control input-sm" data-bind="value: FechaVencimiento" type="text" title="Fecha Vencimiento" readonly />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Campaña:</label>
+                                <div class="col-md-4">
+                                    <input class="form-control input-sm" data-bind="value: Campaña" type="text" title="Campaña" readonly />
+                                </div>
+                                <label class="control-label col-md-2">Tipo Entrega:</label>
+                                <div class="col-md-4">
+                                    <input class="form-control input-sm" data-bind="value: TipoEntrega" type="text" title="Tipo Entrega" readonly />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-hover display responsive" data-bind="visible: Productos().length > 0">
+                                <thead>
+                                    <tr>
+                                        <th colspan="6" class="text-center">Productos</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Nombre</th>
+                                        @*<th>Precio Normal</th>*@
+                                        @*<th>Precio Oferta</th>*@
+                                        <th>Cantidad</th>
+                                        @*<th>Precio Ganguita</th>*@
+                                        @*<th>Ganguitas</th>*@
+                                        @*<th>Precio Ganguita</th>*@
+                                        <th>Precio Final</th>
+                                        <th>Forma Pago</th>
+                                        @*<th># Factura</th>*@
+                                        @*<th>Sucursal Facturación</th>*@
+                                        @*<th>Fecha Facturación</th>*@
+                                        <th>Autorización</th>
+                                    </tr>
+                                </thead>
+                                <tbody data-bind="foreach: Productos">
+                                    <tr>
+                                        <td data-bind="text: CodigoProducto"></td>
+                                        <td data-bind="text: NombreProducto"></td>
+                                        @*<td data-bind="text: PVP"></td>*@
+                                        @*<td data-bind="text: PrecioOferta"></td>*@
+                                        <td data-bind="text: Cantidad"></td>
+                                        @*<td data-bind="text: PrecioGanguita"></td>*@
+                                        @*<td data-bind="text: Ganguitas"></td>*@
+                                        @*<td data-bind="text: PrecioGanguita"></td>*@
+                                        <td data-bind="text: PrecioFinal"></td>
+                                        <td data-bind="text: FormaPagoDes"></td>
+                                        @*<td data-bind="text: Seq_Compte_FAC"></td>*@
+                                        @*<td data-bind="text: SucursalFacturacion"></td>*@
+                                        @*<td data-bind="text: FechaFacturacion"></td>*@
+                                        <td data-bind="text: AutorizacionDes"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-hover display responsive" data-bind="visible: Motivos().length > 0">
+                                <thead>
+                                    <tr>
+                                        <th>Motivos</th>
+                                    </tr>
+                                </thead>
+                                <tbody data-bind="foreach: Motivos">
+                                    <tr>
+                                        <td data-bind="text: Descripcion"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-dismiss="myModal" data-bind="click: $root.CerrarModal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
