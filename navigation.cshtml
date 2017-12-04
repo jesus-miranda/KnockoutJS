@@ -1,0 +1,103 @@
+<nav class="navbar-default navbar-static-side" role="navigation">
+    <div class="sidebar-collapse">
+        <ul class="nav" id="side-menu">
+            <li class="nav-header">
+                <div class="dropdown profile-element">
+                    <span>
+                        <img alt="image" class="img-circle" src="~/Images/profile_small_anonymous.jpg" />
+                    </span>
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <span class="clear">
+                            <span class="block m-t-xs">
+                                <strong class="font-bold" id="NombreUsuario"></strong>
+                            </span> 
+                            <span class="text-muted text-xs block" id="DescripcionPerfil"><b class="caret"></b></span>
+                        </span>
+                    </a>
+                    <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                        @*<li><a href="@Url.Action("Profile", "AppViews")">Perfil</a></li>
+                            <li><a href="@Url.Action("Contacts", "AppViews")">Contactos</a></li>
+                            <li><a href="@Url.Action("Inbox", "Mailbox")">Mailbox</a></li>*@
+                        @*<li class="divider"></li>*@
+                        <li><a href="#" onclick="CerrarSesion()">Salir</a></li>
+                    </ul>
+                </div>
+                <div class="logo-element">
+                    <img src="~/favicon.ico" />
+                </div>
+            </li>
+            @*AQUI APARECERAN LAS OPCIONES*@
+            @*AQUI APARECERAN LAS OPCIONES*@
+        </ul>
+    </div>
+</nav>
+
+<script>
+
+    function SetControllerAction(currentController, currentAction) {
+        sessionStorage.setItem("currentController", currentController);
+        sessionStorage.setItem("currentAction", currentAction);
+    }
+
+    function IsSelected(controller, action, cssClass) {
+        if (cssClass == "" || cssClass == undefined || cssClass == null)
+            cssClass = "active";
+
+        var currentAction = sessionStorage.getItem("currentAction");
+        var currentController = sessionStorage.getItem("currentController");
+
+        if (controller == "" || controller == undefined || controller == null)
+            controller = currentController
+
+        if (action == "" || action == undefined || action == null)
+            action = currentAction
+
+        if (controller == currentController && action == currentAction) {
+            return cssClass;
+        } else {
+            return "";
+        }
+    }
+
+    $(document).ready(function () {
+        $("#DescripcionPerfil").text(sessionStorage.getItem("DescripcionPerfil") + " ");
+        $("#NombreUsuario").text(sessionStorage.getItem("NombreUsuario"));
+
+        var Opciones = JSON.parse(sessionStorage.getItem("UsuarioPermisos"));
+        var flag = false;
+        var textoTag = "";
+
+        textoTag += "<li class=\"" + IsSelected("Dashboards", "", "") + "\">";
+        textoTag += "<a href=\"/Dashboards/Dashboard\"><i class=\"fa fa-th-large\"></i> <span class=\"nav-label\" data-i18n=\"nav.dashboard\" onClick=\"SetControllerAction('Dashboards', '')\">Dashboard</span></a>";
+        textoTag += "</li>";
+
+        if (Opciones != "" && Opciones != null && Opciones != undefined) {
+
+            Opciones.forEach(function (opcion) {
+                if (opcion.isParent) {
+                    if (flag == false) {
+                        flag = true;
+                    }
+                    else {
+                        textoTag += "</ul>";
+                        textoTag += "</li>";
+                    }
+                    textoTag += "<li class=\"" + IsSelected(opcion.controller, "", "") + "\">";
+                    textoTag += "<a href=\"#\">";
+                    textoTag += "<i class=\"" + opcion.imageClass + "\"></i>";
+                    textoTag += "<span class=\"nav-label\" data-i18n=\"" + opcion.controller + "\"> " + opcion.nameOption + " </span>";
+                    textoTag += "<span class=\"fa arrow\"></span>";
+                    textoTag += "</a>";
+                    textoTag += "<ul class=\"nav nav-second-level collapse " + IsSelected(opcion.controller, "", "") + "\">";
+                } else {
+                    textoTag += "<li class=\"" + IsSelected("", opcion.action, "") + "\">";
+                    textoTag += "<a href=\"" + opcion.href + "\" onClick=\"SetControllerAction('" + opcion.controller.trim() + "', '" + opcion.action.trim() + "')\">" + opcion.nameOption + " </a>";
+                    textoTag += "</li>";
+                }
+            });
+
+        }
+
+        $("#side-menu").append(textoTag);
+    });
+</script>
